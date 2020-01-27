@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RotorDroid</string>
+    <string name="scanSwitch">Scan</string>
+    <string name="freqSelector">Frequency selector</string>
 </resources>

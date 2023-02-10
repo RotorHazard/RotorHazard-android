@@ -29,6 +29,7 @@ dependencies {
     implementation 'com.github.mik3y:usb-serial-for-android:2.0.0'
     implementation 'com.jakewharton:butterknife:10.0.0'
     implementation "com.androidplot:androidplot-core:1.5.7"
+    implementation 'com.google.android.material:material:1.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

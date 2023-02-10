@@ -8,48 +8,72 @@
 
     <Switch
         android:id="@+id/scanSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/scanSwitch"
+        android:layout_width="80dp"
+        android:layout_height="38dp"
         android:checked="true"
+        android:text="@string/scanSwitch"
         app:layout_constraintBottom_toTopOf="@id/plot"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/LBandSwitch"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/LBandSwitch"
+        android:layout_width="95dp"
+        android:layout_height="38dp"
+        android:text="@string/LBandSwitch"
+        app:layout_constraintBottom_toTopOf="@id/plot"
+        app:layout_constraintLeft_toRightOf="@id/scanSwitch"
+        app:layout_constraintRight_toLeftOf="@id/fastSwitch"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/fastSwitch"
+        android:layout_width="115dp"
+        android:layout_height="38dp"
+        android:text="@string/fastSwitch"
+        app:layout_constraintBottom_toTopOf="@id/plot"
+        app:layout_constraintLeft_toRightOf="@id/LBandSwitch"
         app:layout_constraintRight_toLeftOf="@id/freqSelector"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <EditText
         android:id="@+id/freqSelector"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="38dp"
+        android:enabled="false"
+        android:hint="@string/freqSelector"
         android:inputType="number"
         android:maxLength="4"
         android:textSize="8pt"
-        android:enabled="false"
-        android:hint="@string/freqSelector"
         app:layout_constraintBottom_toTopOf="@id/plot"
-        app:layout_constraintLeft_toRightOf="@id/scanSwitch"
+        app:layout_constraintLeft_toRightOf="@id/fastSwitch"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.androidplot.xy.XYPlot
-        style="@style/APDefacto.Dark"
         android:id="@+id/plot"
+        style="@style/APDefacto.Dark"
         android:layout_width="match_parent"
         android:layout_height="280pt"
-        app:renderMode="use_background_thread"
-        app:lineLabels="left|bottom"
-        app:lineLabelRotationBottom="-45"
-        app:layout_constraintTop_toBottomOf="@id/freqSelector"
         app:layout_constraintBottom_toTopOf="@id/messages"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/freqSelector"
+        app:lineLabelRotationBottom="-45"
+        app:lineLabels="left|bottom"
+        app:renderMode="use_background_thread" />
 
-    <TextView android:id="@+id/messages"
+    <TextView
+        android:id="@+id/messages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/plot"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/plot" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

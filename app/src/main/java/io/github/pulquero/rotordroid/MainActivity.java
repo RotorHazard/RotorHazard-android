@@ -35,10 +35,10 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int MIN_FREQ = 5645;
+    private static int MIN_FREQ = 5645;
     private static final int MAX_FREQ = 5945;
     private static final long SCAN_UPDATE_INTERVAL = 100L;
-    private static final int SCAN_STEP = 2;
+    private static int SCAN_STEP = 2;
     private static final long SIGNAL_UPDATE_INTERVAL = 50L;
     private static final int NUM_SAMPLES = 200;
     private ScheduledExecutorService executor;
@@ -69,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
     EditText freqSelector;
     @BindView(R.id.scanSwitch)
     Switch scanSwitch;
+    @BindView(R.id.LBandSwitch)
+    Switch LBandSwitch;
+    @BindView(R.id.fastSwitch)
+    Switch fastSwitch;
     @BindView(R.id.plot)
     XYPlot plot;
     @BindView(R.id.messages)
@@ -248,6 +252,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @OnCheckedChanged(R.id.fastSwitch)
+    public void onfastSwitch() {
+        fStarter.cancel(true);
+        if(fastSwitch.isChecked()) {
+            SCAN_STEP = 5;
+        } else {
+            SCAN_STEP = 2;
+        }
+        clearSeries();
+        try {
+            fStarter = acquisitionStarter.call();
+        } catch (Exception ex) {
+            runOnUiThread(() -> msgLabel.setText(ex.getMessage()));
+        }
+    }
+
+    @OnCheckedChanged(R.id.LBandSwitch)
+    public void onLBandSwitch() {
+        fStarter.cancel(true);
+        if(LBandSwitch.isChecked()) {
+            MIN_FREQ = 5333;
+        } else {
+            MIN_FREQ = 5645;
+        }
+        clearSeries();
+        try {
+            fStarter = acquisitionStarter.call();
+        } catch (Exception ex) {
+            runOnUiThread(() -> msgLabel.setText(ex.getMessage()));
+        }
+    }
     private void clearSeries() {
         if (spectrumSeries != null) {
             plot.removeSeries(spectrumSeries);

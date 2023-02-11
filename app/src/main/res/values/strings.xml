@@ -1,5 +1,11 @@
 <resources>
-    <string name="app_name">RotorDroid</string>
+    <string name="app_name">Frequency scanner</string>
     <string name="scanSwitch">Scan</string>
+    <string name="fastSwitch">FastMode</string>
+    <string name="LBandSwitch">L Band</string>
     <string name="freqSelector">Frequency selector</string>
+    <string name="RSSI_NAME">RSSI_NAME</string>
+    <string name="RSSI_Value">RSSI_Value</string>
+    <string name="MIN_MHZ">MIN_MHZ</string>
+    <string name="MAX_MHZ">MAX_MHZ</string>
 </resources>

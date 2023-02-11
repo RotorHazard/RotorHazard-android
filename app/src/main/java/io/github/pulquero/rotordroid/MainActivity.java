@@ -35,10 +35,10 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int MIN_FREQ = 5645;
-    private static final int MAX_FREQ = 5945;
+    private static int MIN_FREQ = 5600;
+    private static int MAX_FREQ = 6000;
     private static final long SCAN_UPDATE_INTERVAL = 100L;
-    private static final int SCAN_STEP = 2;
+    private static int SCAN_STEP = 2;
     private static final long SIGNAL_UPDATE_INTERVAL = 50L;
     private static final int NUM_SAMPLES = 200;
     private ScheduledExecutorService executor;
@@ -69,10 +69,22 @@ public class MainActivity extends AppCompatActivity {
     EditText freqSelector;
     @BindView(R.id.scanSwitch)
     Switch scanSwitch;
+    @BindView(R.id.LBandSwitch)
+    Switch LBandSwitch;
+    @BindView(R.id.fastSwitch)
+    Switch fastSwitch;
     @BindView(R.id.plot)
     XYPlot plot;
     @BindView(R.id.messages)
     TextView msgLabel;
+    @BindView(R.id.RSSI_NAME)
+    TextView RSSI_NAME;
+    @BindView(R.id.RSSI_Value)
+    TextView RSSI_Value;
+    @BindView(R.id.MIN_MHZ)
+    EditText MIN_MHZ;
+    @BindView(R.id.MAX_MHZ)
+    EditText MAX_MHZ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +191,8 @@ public class MainActivity extends AppCompatActivity {
                     node.setFrequency(freq);
                     String freqValue = Integer.toString(freq);
                     runOnUiThread(() -> freqSelector.setText(freqValue));
+                    runOnUiThread(() -> RSSI_Value.setText(String.valueOf(stats.rssi)));// This is for auto scanning
+
                 } catch (ExecutionException | InterruptedException | IOException ex) {
                     runOnUiThread(() -> msgLabel.setText(ex.getMessage()));
                 }
@@ -217,6 +231,8 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(() ->
                         plot.setDomainBoundaries(currentTime - NUM_SAMPLES*SIGNAL_UPDATE_INTERVAL, currentTime, BoundaryMode.FIXED)
                     );
+                    runOnUiThread(() -> RSSI_Value.setText(String.valueOf(stats.rssi)));// This is for manual entered Mhz scanning
+
                 } catch (ExecutionException | InterruptedException | IOException ex) {
                     runOnUiThread(() -> msgLabel.setText(ex.getMessage()));
                 }
@@ -233,11 +249,35 @@ public class MainActivity extends AppCompatActivity {
         fStarter.cancel(true);
         if(scanSwitch.isChecked()) {
             freqSelector.setEnabled(false);
+            MIN_MHZ.setEnabled(false);
+            MAX_MHZ.setEnabled(false);
+
+            LBandSwitch.setChecked(false);
+
+            // set to MIN_MHZ to avoid stuck at < MIN_MHZ
+            String SET_MIN_FREQ = String.valueOf(MIN_MHZ.getText());
+            String SET_MAX_FREQ = String.valueOf(MAX_MHZ.getText());
+            MIN_FREQ = Integer.parseInt(SET_MIN_FREQ);
+            MAX_FREQ = Integer.parseInt(SET_MAX_FREQ);
+
+            try {
+                Node node = fNode.get();
+                int freq = MIN_FREQ;
+                node.setFrequency(freq);
+                String freqValue = Integer.toString(freq);
+                runOnUiThread(() -> freqSelector.setText(freqValue));
+
+            } catch (ExecutionException | InterruptedException | IOException ex) {
+                runOnUiThread(() -> msgLabel.setText(ex.getMessage()));
+            }
+
             freqSelector.removeTextChangedListener(updateFrequencyListener);
             acquisitionStarter = scanAcquisition();
         } else {
             freqSelector.addTextChangedListener(updateFrequencyListener);
             freqSelector.setEnabled(true);
+            MIN_MHZ.setEnabled(true);
+            MAX_MHZ.setEnabled(true);
             acquisitionStarter = signalAcquisition();
         }
         clearSeries();
@@ -248,6 +288,54 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @OnCheckedChanged(R.id.fastSwitch)
+    public void onfastSwitch() {
+        fStarter.cancel(true);
+        if(fastSwitch.isChecked()) {
+            SCAN_STEP = 5;
+        } else {
+            SCAN_STEP = 2;
+        }
+        clearSeries();
+        try {
+            fStarter = acquisitionStarter.call();
+        } catch (Exception ex) {
+            runOnUiThread(() -> msgLabel.setText(ex.getMessage()));
+        }
+    }
+
+    @OnCheckedChanged(R.id.LBandSwitch)
+    public void onLBandSwitch() {
+        fStarter.cancel(true);
+        if(LBandSwitch.isChecked()) {
+            MIN_FREQ = 5333;
+        } else {
+            //MIN_FREQ = 5645;
+            // set to MIN_MHZ to avoid stuck at < MIN_MHZ
+            String SET_MIN_FREQ = String.valueOf(MIN_MHZ.getText());
+            String SET_MAX_FREQ = String.valueOf(MAX_MHZ.getText());
+            MIN_FREQ = Integer.parseInt(SET_MIN_FREQ);
+            MAX_FREQ = Integer.parseInt(SET_MAX_FREQ);
+
+            try {
+                Node node = fNode.get();
+                int freq = MIN_FREQ;
+                node.setFrequency(freq);
+                String freqValue = Integer.toString(freq);
+                runOnUiThread(() -> freqSelector.setText(freqValue));
+
+            } catch (ExecutionException | InterruptedException | IOException ex) {
+                runOnUiThread(() -> msgLabel.setText(ex.getMessage()));
+            }
+
+        }
+        clearSeries();
+        try {
+            fStarter = acquisitionStarter.call();
+        } catch (Exception ex) {
+            runOnUiThread(() -> msgLabel.setText(ex.getMessage()));
+        }
+    }
     private void clearSeries() {
         if (spectrumSeries != null) {
             plot.removeSeries(spectrumSeries);

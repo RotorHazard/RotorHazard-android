@@ -75,6 +75,9 @@ public class Node implements Closeable {
         byte laps = buf[0];
         int msSinceLastLap = read16(buf, 1);
         stats.rssi = buf[3];
+        if (stats.rssi < 0) {
+            stats.rssi = 128;
+        }
         byte peakRssi = buf[4];
         byte lastPassPeak = buf[5];
         int loopTimeMicros = read16(buf, 6);

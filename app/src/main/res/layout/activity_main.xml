@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RSSI_TEXT"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -12,31 +13,63 @@
         android:layout_height="38dp"
         android:checked="true"
         android:text="@string/scanSwitch"
-        app:layout_constraintBottom_toTopOf="@id/plot"
+        app:layout_constraintBottom_toTopOf="@id/RSSI_NAME"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/LBandSwitch"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/RSSI_NAME"
+        android:layout_width="80dp"
+        android:layout_height="38dp"
+        android:text="RSSI : "
+        app:layout_constraintTop_toBottomOf="@id/scanSwitch"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/RSSI_Value"
+        app:layout_constraintBottom_toTopOf="@id/plot" />
     <Switch
         android:id="@+id/LBandSwitch"
         android:layout_width="95dp"
         android:layout_height="38dp"
         android:text="@string/LBandSwitch"
-        app:layout_constraintBottom_toTopOf="@id/plot"
+        app:layout_constraintBottom_toTopOf="@id/RSSI_Value"
         app:layout_constraintLeft_toRightOf="@id/scanSwitch"
         app:layout_constraintRight_toLeftOf="@id/fastSwitch"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/RSSI_Value"
+        android:layout_width="100dp"
+        android:layout_height="38dp"
+        android:textSize="8pt"
+        app:layout_constraintTop_toBottomOf="@id/LBandSwitch"
+        app:layout_constraintLeft_toRightOf="@id/RSSI_NAME"
+        app:layout_constraintRight_toLeftOf="@+id/MIN_MHZ"
+        app:layout_constraintBottom_toTopOf="@+id/plot"/>
 
     <Switch
         android:id="@+id/fastSwitch"
         android:layout_width="115dp"
         android:layout_height="38dp"
         android:text="@string/fastSwitch"
-        app:layout_constraintBottom_toTopOf="@id/plot"
+        app:layout_constraintBottom_toTopOf="@id/MIN_MHZ"
         app:layout_constraintLeft_toRightOf="@id/LBandSwitch"
         app:layout_constraintRight_toLeftOf="@id/freqSelector"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/MIN_MHZ"
+        android:layout_width="100dp"
+        android:layout_height="38dp"
+        android:enabled="false"
+        android:text="5600"
+        android:inputType="number"
+        android:maxLength="4"
+        android:textSize="8pt"
+        app:layout_constraintTop_toBottomOf="@id/fastSwitch"
+        app:layout_constraintLeft_toRightOf="@id/RSSI_Value"
+        app:layout_constraintRight_toLeftOf="@+id/MAX_MHZ"
+        app:layout_constraintBottom_toTopOf="@+id/plot"/>
 
     <EditText
         android:id="@+id/freqSelector"
@@ -47,10 +80,24 @@
         android:inputType="number"
         android:maxLength="4"
         android:textSize="8pt"
-        app:layout_constraintBottom_toTopOf="@id/plot"
+        app:layout_constraintBottom_toTopOf="@id/MAX_MHZ"
         app:layout_constraintLeft_toRightOf="@id/fastSwitch"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/MAX_MHZ"
+        android:layout_width="100dp"
+        android:layout_height="38dp"
+        android:enabled="false"
+        android:text="6000"
+        android:inputType="number"
+        android:maxLength="4"
+        android:textSize="8pt"
+        app:layout_constraintTop_toBottomOf="@id/freqSelector"
+        app:layout_constraintLeft_toRightOf="@id/MIN_MHZ"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/plot"/>
 
     <com.androidplot.xy.XYPlot
         android:id="@+id/plot"
@@ -73,6 +120,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/plot" />
+
+
 
 
 
